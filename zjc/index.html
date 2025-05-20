@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>科技大学数据库后台</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f06, #4a90e2);
+            color: white;
+        }
+        h1, p {
+            text-align: center;
+            margin: 10px 0;
+        }
+        .online-info {
+            max-height: 200px;
+            overflow-y: auto;
+            width: 80%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+    </style>
+    <script>
+        const correctPassword = "是"; // 请替换为你的实际密码
+
+        function checkPassword() {
+            let userPassword = prompt("请输入密码:(内部访问,请勿访问)");
+            if (userPassword !== correctPassword) {
+                alert("密码错误，请刷新页面重试。");
+                document.body.style.display = "none";
+            } else {
+                document.body.style.display = "flex";
+                updateOnlineCount();
+            }
+        }
+
+        function updateOnlineCount() {
+            fetch('client.php')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('online-count').innerText = "当前在线人数: " + data.count;
+                    document.getElementById('online-ips').innerHTML = "在线用户IP: <br>" + data.ips.join('<br>');
+                });
+        }
+
+        // 每隔5秒更新一次在线人数
+        setInterval(updateOnlineCount, 5000);
+
+        // 页面加载时立即更新一次在线人数
+        window.onload = checkPassword;
+    </script>
+</head>
+<body style="display: none;">
+    <h1>欢迎访问青年网</h1>
+    <p id="online-count">正在获取在线人数...</p>
+    <div class="online-info">
+        <p id="online-ips">正在获取在线用户IP...</p>
+    </div>
+</body>
+<script type="text/javascript" src="//api.tongjiniao.com/c?_=629039829649461248" async></script>
+</html>
